@@ -1,35 +1,86 @@
 <!DOCTYPE html>
 <html>
-  <body>
+
+<head>
+  <title>
+    etch-a-sketch
+  </title>
+</head>
+
+<body>
+  <style>
+    html,
+    body {
+      background: blue;
+      height: 100%;
+      width: 100%;
+    }
+
+    .container-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      background: red;
+    }
+  </style>
+  <button id="resize">Resize</button>
+  <button id="reset">Reset</button>
+  <button id="rainbow">Rainbow</button>
+
+  <div class="container-wrapper">
     <div id="container">
-
     </div>
-    <script>
-      const container = document.querySelector("#container");
-      container.style.display = "grid";
-      container.style.gridArea = 3 / 3 / 4 / 4;
-      container.style.gridTemplateRows =  "100px 100px 100px 100px";
-      container.style.gridTemplateColumns = "100px 100px 100px 100px";
-      container.style.gridColumnGap = "10px";
-      container.style.gridRowGap = "10px";
-      container.style.width = "430px";
-      //container.style.height = "100px";
-      container.style.margin = "0 auto";
-      container.style.position = "relative";
-      container.style.top = "-50%";
-      container.style.transform = "translateY(50%)";
+  </div>
+  <script>
+    const container = document.querySelector("#container");
+    const containerWrapper = document.querySelector("container-wrapper")
+    let x = 4;
+    container.style.display = "grid";
+    container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
+    container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
 
-      function gridCreation(number) {
-        for ( i = 0; i < number; ++i) {
+    function style(x) {
+      console.log(x)
+      container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
+      console.log(x)
+      container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
+      console.log(x)
+    }
+
+
+
+
+    container.style.gridColumnGap = "1px";
+    container.style.gridRowGap = "1px";
+    container.style.width = "700px";
+    container.style.height = "700px";
+    container.addEventListener("mouseover", () => {
+      if (event.target == container) {
+        return;
+      }
+      let target = event.target;
+      target.style.backgroundColor = "white";
+    });
+
+    const resize = document.querySelector("#resize");
+    resize.addEventListener("click", () => {
+      var size = prompt("Please enter a number between 1 and 100.")
+      gridCreation(size);
+      style(size);
+    })
+
+    function gridCreation(number) {
+      for (i = 0; i < (number * number); ++i) {
         let cell = document.createElement('div')
-        cell.textContent = "div";
         cell.style.backgroundColor = "black";
         container.appendChild(cell);
-        }
       }
-      gridCreation(16);
+    }
+    gridCreation(16);
 
+  </script>
+</body>
 
-    </script>
-  </body>
 </html>
