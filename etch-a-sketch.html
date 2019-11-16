@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="container">
+
+    </div>
+    <script>
+      const container = document.querySelector("#container");
+      container.style.display = "grid";
+      container.style.gridArea = 3 / 3 / 4 / 4;
+      container.style.gridTemplateRows =  "100px 100px 100px 100px";
+      container.style.gridTemplateColumns = "100px 100px 100px 100px";
+      container.style.gridColumnGap = "10px";
+      container.style.gridRowGap = "10px";
+      container.style.width = "430px";
+      //container.style.height = "100px";
+      container.style.margin = "0 auto";
+      container.style.position = "relative";
+      container.style.top = "-50%";
+      container.style.transform = "translateY(50%)";
+
+      function gridCreation(number) {
+        for ( i = 0; i < number; ++i) {
+        let cell = document.createElement('div')
+        cell.textContent = "div";
+        cell.style.backgroundColor = "black";
+        container.appendChild(cell);
+        }
+      }
+      gridCreation(16);
+
+
+    </script>
+  </body>
+</html>
