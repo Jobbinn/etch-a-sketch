@@ -26,7 +26,7 @@
     }
   </style>
   <button id="resize">Resize</button>
-  <button id="reset">Reset</button>
+  <button id="clear">Clear</button>
   <button id="rainbow">Rainbow</button>
 
   <div class="container-wrapper">
@@ -36,45 +36,49 @@
   <script>
     const container = document.querySelector("#container");
     const containerWrapper = document.querySelector("container-wrapper")
+    const resize = document.querySelector("#resize");
+    const clear = document.querySelector("#clear");
     let x = 4;
+
+
+    clear.addEventListener('click', () => {
+      let cells = document.querySelectorAll('.cell')
+      cells.forEach( cell => cell.style.backgroundColor = 'black')
+    })
+
+
+
     container.style.display = "grid";
     container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
     container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
-
-    function style(x) {
-      console.log(x)
-      container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
-      console.log(x)
-      container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
-      console.log(x)
-    }
-
-
-
-
     container.style.gridColumnGap = "1px";
     container.style.gridRowGap = "1px";
     container.style.width = "700px";
     container.style.height = "700px";
     container.addEventListener("mouseover", () => {
-      if (event.target == container) {
+    if (event.target == container) {
         return;
       }
       let target = event.target;
       target.style.backgroundColor = "white";
     });
 
-    const resize = document.querySelector("#resize");
     resize.addEventListener("click", () => {
       var size = prompt("Please enter a number between 1 and 100.")
       gridCreation(size);
       style(size);
-    })
+    });
+
+    function style(x) {
+      container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
+      container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
+    }
 
     function gridCreation(number) {
       for (i = 0; i < (number * number); ++i) {
         let cell = document.createElement('div')
         cell.style.backgroundColor = "black";
+        cell.className = 'cell'
         container.appendChild(cell);
       }
     }
