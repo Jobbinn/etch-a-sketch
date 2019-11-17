@@ -27,7 +27,9 @@
   </style>
   <button id="resize">Resize</button>
   <button id="clear">Clear</button>
+  <button id="basic">Basic</button>
   <button id="rainbow">Rainbow</button>
+  <button id="gray">50 Shades of gray</button>
 
   <div class="container-wrapper">
     <div id="container">
@@ -38,15 +40,10 @@
     const containerWrapper = document.querySelector("container-wrapper")
     const resize = document.querySelector("#resize");
     const clear = document.querySelector("#clear");
-    let x = 4;
-
-
-    clear.addEventListener('click', () => {
-      let cells = document.querySelectorAll('.cell')
-      cells.forEach( cell => cell.style.backgroundColor = 'black')
-    })
-
-
+    const gray = document.querySelector("#gray");
+    const rainbowBtn = document.querySelector("#rainbow");
+    const basic = document.querySelector("#basic");
+    const x = 4;
 
     container.style.display = "grid";
     container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
@@ -55,13 +52,45 @@
     container.style.gridRowGap = "1px";
     container.style.width = "700px";
     container.style.height = "700px";
-    container.addEventListener("mouseover", () => {
-    if (event.target == container) {
-        return;
+
+    rainbowBtn.addEventListener('click', () => mouseOver("rainbow"));
+    basic.addEventListener('click', () => mouseOver("black"));
+
+
+    function mouseOver(fun) {
+      if (fun === "black") {
+        container.addEventListener("mouseover", () => {
+          if (event.target == container) {
+            return;
+          }
+          let target = event.target;
+          target.style.backgroundColor = "black"
+        });
+      } else if (fun === "rainbow") {
+        container.addEventListener("mouseover", () => {
+          if (event.target == container) {
+            return;
+          }
+          let target = event.target;
+          target.style.backgroundColor = rainbow();
+        });
       }
-      let target = event.target;
-      target.style.backgroundColor = "white";
+    }
+
+    function rainbow() {
+      let r = (Math.floor(Math.random() * 255));
+      let g = (Math.floor(Math.random() * 255));
+      let b = (Math.floor(Math.random() * 255));
+      return `rgb(${r}, ${g}, ${b})`
+    }
+
+    clear.addEventListener('click', () => {
+      let cells = document.querySelectorAll('.cell')
+      cells.forEach(cell => cell.style.backgroundColor = 'white')
+      cells.forEach(cell => cell.style.opacity = 1);
     });
+
+
 
     resize.addEventListener("click", () => {
       var size = prompt("Please enter a number between 1 and 100.")
@@ -73,17 +102,43 @@
       container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
       container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
     }
-
     function gridCreation(number) {
       for (i = 0; i < (number * number); ++i) {
         let cell = document.createElement('div')
-        cell.style.backgroundColor = "black";
+        let color = 255;
+        cell.style.backgroundColor = `rgb(${color}, ${color}, ${color})`;
         cell.className = 'cell'
+        cell.style.opacity = 1;
+
         container.appendChild(cell);
       }
     }
     gridCreation(16);
-
+/* My next step is to add a function that adds 10% more shade to the hovered-over cell. In order to do this, I will have to assign an rgb value
+    rgb(1, 2, 3) I will make these 3 into a parameter. It wil somehow have to be able to affect the hovered-over cells present value,
+    instead of assigning it a new one. Should be as simple as x = 1.1 * x.
+    now what would a step by step approach be?
+    1. Create function
+    2. have it calculate x = 1.1 * x
+    3. then have it change background to rgb(x, x, x)
+    4. Create and assign a button to this function.
+    
+    We have run into a problem. How do we make it so that each cell has its own seperate color value, and how do we interact with those values,
+    supposedly out of scope?
+    How do I change the rgb values of the mouse-overed cell? The approach I tried and failed with now, has a global scope variable of color = 255. This does not help.
+    I need a new approach, how do I access the present rgb value of a selected element? Maybe I don't need to access is, just add to it. How do I do that?
+    Try Yuushas approach and see if you can make it for one cell, then see if you can replicate it.
+    I did that in a seperate file, worked out well, but scope issue persists.
+    Still can't find a way to  isolate and manipulate each cell induvidually.
+    
+    How about the rainbow function?
+    
+    We can find a way to generate random rgb values  and parse them in.
+    Tha sounds easy in theory, But if we wan't to combine both methods, we still have to find a way
+    for the mouseOver to affect only the selected cells color values.
+    
+    
+    */
   </script>
 </body>
 
