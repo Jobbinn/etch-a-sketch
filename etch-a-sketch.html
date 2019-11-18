@@ -60,7 +60,7 @@
     </div>
   </div>
   <script>
-    const container = document.querySelector("#container");
+    let container = document.querySelector("#container");
     const containerWrapper = document.querySelector("container-wrapper")
     const resize = document.querySelector("#resize");
     const clear = document.querySelector("#clear");
@@ -85,7 +85,8 @@
 
     clear.addEventListener('click', () => {
       let cells = document.querySelectorAll('.cell');
-      cells.forEach(cell => cell.style.backgroundColor = 'white');
+      let color = 255;
+      cells.forEach(cell => cell.style.backgroundColor = `rgb(${color}, ${color}, ${color})`);
       cells.forEach(cell => cell.style.opacity = 1);
     });
 
@@ -129,15 +130,30 @@
       container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
     }
 
+    function removeListeners() {
+      var old_element = document.getElementById('container');
+      var new_element = old_element.cloneNode(true);
+      old_element.parentNode.replaceChild(new_element, old_element);
+      container = new_element
+    }
+
+
+
+
     function mouseOver(fun) {
+      removeListeners()
+
       if (fun === "black") {
         container.addEventListener("mouseover", () => {
           if (event.target == container) {
             return;
           }
           let target = event.target;
-          target.style.backgroundColor = "black"
+          let color = 0;
+          target.style.backgroundColor = "rgb(0, 0, 0)"
         });
+
+        
       } else if (fun === "rainbow") {
         container.addEventListener("mouseover", () => {
           if (event.target == container) {
@@ -161,9 +177,10 @@
           }
           let target = event.target;
           console.log(target.style.backgroundColor)
-
+          
           const { r, g, b } = getRGBValues(target.style.backgroundColor)
 
+          
           target.style.backgroundColor = `rgb(${(r - 50)}, ${(g - 50)}, ${(b - 50)})`
           console.log(r, g, b)
         });
@@ -181,7 +198,7 @@
         container.appendChild(cell);
       }
     }
-    gridCreation(16);
+    gridCreation(4);
     //mouseOver("black");
 /* My next step is to add a function that adds 10% more shade to the hovered-over cell. In order to do this, I will have to assign an rgb value
     rgb(1, 2, 3) I will make these 3 into a parameter. It wil somehow have to be able to affect the hovered-over cells present value,
