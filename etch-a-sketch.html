@@ -24,12 +24,36 @@
       width: 100%;
       background: red;
     }
+
+    .color {
+      display: inline-block;
+      margin: 10px 50px 10px 60px
+    }
+
+    #bluetag {
+      position: relative;
+      right: 10px
+    }
   </style>
-  <button id="resize">Resize</button>
-  <button id="clear">Clear</button>
-  <button id="basic">Basic</button>
-  <button id="rainbow">Rainbow</button>
-  <button id="gray">50 Shades of gray</button>
+  <div>
+    <button id="resize">Resize</button>
+    <button id="clear">Clear</button>
+    <button id="black">Black</button>
+    <button id="rainbow">Rainbow</button>
+    <button id="shader">50 Shades of gray</button>
+    <button id="rgb">Custom RGB</button>
+  </div>
+  <div>
+    <p class="color">Red</p>
+    <p class="color">Green</p>
+    <p class="color" id="bluetag">Blue</p>
+  </div>
+  <div>
+    <input type="number" id="red" value="0" min="0" max="255">
+    <input type="number" id="green" value="0" min="0" max="255">
+    <input type="number" id="blue" value="0" min="0" max="255">
+  </div>
+
 
   <div class="container-wrapper">
     <div id="container">
@@ -40,9 +64,10 @@
     const containerWrapper = document.querySelector("container-wrapper")
     const resize = document.querySelector("#resize");
     const clear = document.querySelector("#clear");
-    const gray = document.querySelector("#gray");
+    const shader = document.querySelector("#shader");
     const rainbowBtn = document.querySelector("#rainbow");
-    const basic = document.querySelector("#basic");
+    const black = document.querySelector("#black");
+    const rgb = document.querySelector("#rgb")
     const x = 4;
 
     container.style.display = "grid";
@@ -54,8 +79,55 @@
     container.style.height = "700px";
 
     rainbowBtn.addEventListener('click', () => mouseOver("rainbow"));
-    basic.addEventListener('click', () => mouseOver("black"));
+    black.addEventListener('click', () => mouseOver("black"));
+    rgb.addEventListener('click', () => mouseOver("rgb"));
+    shader.addEventListener('click', () => mouseOver("shader"));
 
+    clear.addEventListener('click', () => {
+      let cells = document.querySelectorAll('.cell');
+      cells.forEach(cell => cell.style.backgroundColor = 'white');
+      cells.forEach(cell => cell.style.opacity = 1);
+    });
+
+    resize.addEventListener("click", () => {
+      var size = prompt("Please enter a number between 1 and 100.");
+      gridCreation(size);
+      style(size);
+    });
+    function num(color) {
+      if (color === "red") {
+        let colorValue = document.getElementById("red").value;
+        return colorValue;
+      } else if (color === "green") {
+        let colorValue = document.getElementById("green").value;
+        return colorValue;
+      } else if (color === "blue") {
+        let colorValue = document.getElementById("blue").value;
+        return colorValue;
+      }
+    }
+
+    function getRGBValues(str) {
+      var vals = str.substring(str.indexOf('(') + 1, str.length - 1).split(', ');
+      return {
+        'r': vals[0],
+        'g': vals[1],
+        'b': vals[2]
+      };
+    }
+
+    function rainbow() {
+      let r = (Math.floor(Math.random() * 255));
+      let g = (Math.floor(Math.random() * 255));
+      let b = (Math.floor(Math.random() * 255));
+      return `rgb(${r}, ${g}, ${b})`
+    }
+
+
+    function style(x) {
+      container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
+      container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
+    }
 
     function mouseOver(fun) {
       if (fun === "black") {
@@ -74,34 +146,31 @@
           let target = event.target;
           target.style.backgroundColor = rainbow();
         });
+      } else if (fun === "rgb") {
+        container.addEventListener("mouseover", () => {
+          if (event.target == container) {
+            return;
+          }
+          let target = event.target;
+          target.style.backgroundColor = `rgb(${num("red")}, ${num("green")}, ${num("blue")})`
+        });
+      } else if (fun === "shader") {
+        container.addEventListener("mouseover", () => {
+          if (event.target == container) {
+            return;
+          }
+          let target = event.target;
+          console.log(target.style.backgroundColor)
+
+          const { r, g, b } = getRGBValues(target.style.backgroundColor)
+
+          target.style.backgroundColor = `rgb(${(r - 50)}, ${(g - 50)}, ${(b - 50)})`
+          console.log(r, g, b)
+        });
       }
     }
 
-    function rainbow() {
-      let r = (Math.floor(Math.random() * 255));
-      let g = (Math.floor(Math.random() * 255));
-      let b = (Math.floor(Math.random() * 255));
-      return `rgb(${r}, ${g}, ${b})`
-    }
 
-    clear.addEventListener('click', () => {
-      let cells = document.querySelectorAll('.cell')
-      cells.forEach(cell => cell.style.backgroundColor = 'white')
-      cells.forEach(cell => cell.style.opacity = 1);
-    });
-
-
-
-    resize.addEventListener("click", () => {
-      var size = prompt("Please enter a number between 1 and 100.")
-      gridCreation(size);
-      style(size);
-    });
-
-    function style(x) {
-      container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
-      container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
-    }
     function gridCreation(number) {
       for (i = 0; i < (number * number); ++i) {
         let cell = document.createElement('div')
@@ -109,11 +178,11 @@
         cell.style.backgroundColor = `rgb(${color}, ${color}, ${color})`;
         cell.className = 'cell'
         cell.style.opacity = 1;
-
         container.appendChild(cell);
       }
     }
     gridCreation(16);
+    //mouseOver("black");
 /* My next step is to add a function that adds 10% more shade to the hovered-over cell. In order to do this, I will have to assign an rgb value
     rgb(1, 2, 3) I will make these 3 into a parameter. It wil somehow have to be able to affect the hovered-over cells present value,
     instead of assigning it a new one. Should be as simple as x = 1.1 * x.
@@ -136,6 +205,9 @@
     We can find a way to generate random rgb values  and parse them in.
     Tha sounds easy in theory, But if we wan't to combine both methods, we still have to find a way
     for the mouseOver to affect only the selected cells color values.
+    
+    Since opacity is slowly destroying my brain, We should try and make an rgb selector.
+    If we manage to pull that off, then we should be more prepared to deal with the shading issue.
     
     
     */
