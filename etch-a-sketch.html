@@ -34,6 +34,15 @@
       position: relative;
       right: 10px
     }
+
+    #container {
+      display: grid;
+      grid-column-gap: 1px;
+      grid-row-gap: 1px;
+      width: 700px;
+      height: 700px;
+
+    }
   </style>
   <div>
     <button id="resize">Resize</button>
@@ -70,14 +79,9 @@
     const rgb = document.querySelector("#rgb")
     const x = 4;
 
-    container.style.display = "grid";
     container.style.gridTemplateRows = `repeat(${x}, 1fr)`;
     container.style.gridTemplateColumns = `repeat(${x}, 1fr)`;
-    container.style.gridColumnGap = "1px";
-    container.style.gridRowGap = "1px";
-    container.style.width = "700px";
-    container.style.height = "700px";
-
+    
     rainbowBtn.addEventListener('click', () => mouseOver("rainbow"));
     black.addEventListener('click', () => mouseOver("black"));
     rgb.addEventListener('click', () => mouseOver("rgb"));
@@ -181,7 +185,7 @@
           const { r, g, b } = getRGBValues(target.style.backgroundColor)
 
           
-          target.style.backgroundColor = `rgb(${(r - 50)}, ${(g - 50)}, ${(b - 50)})`
+          target.style.backgroundColor = `rgb(${(r - 25.5)}, ${(g - 25.5)}, ${(b - 25.5)})`
           console.log(r, g, b)
         });
       }
